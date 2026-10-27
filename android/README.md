@@ -66,27 +66,42 @@ The LSP backend loads this file lazily on first use. If the file is missing, And
 
 ### Prerequisites
 
-- Android Studio (Ladybug or newer)
+- Nix with flakes enabled (recommended), or Android Studio (Ladybug or newer)
 - JDK 17
-- Android SDK 35
+- Android SDK 36
 - `google-services.json` placed at `android/app/google-services.json`
 
-### Build
+### Build with Nix
+
+The `flake.nix` provides JDK 17, the Android SDK, and adb. The `justfile` wraps every command in the development shell.
+
+```bash
+cd android
+just build
+```
+
+The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
+
+### Build with Android Studio
+
+Open the `android/` directory in Android Studio and run on a device/emulator. Or run:
 
 ```bash
 cd android
 ./gradlew assembleDebug
 ```
 
-The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
+### Install over Wi-Fi
 
-### Run
+Pair the phone once, then connect and install:
 
 ```bash
-./gradlew installDebug
+just pair IP:PAIRING_PORT PAIRING_CODE
+just connect IP DEBUG_PORT
+just install
 ```
 
-Or open the `android/` directory in Android Studio and run on a device/emulator.
+Run `just` in `android/`. Run `just devices` to list connected phones. Run `just test` for the JVM unit tests.
 
 ## History refresh
 

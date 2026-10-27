@@ -1,0 +1,36 @@
+# Recipes for the Stable Channels Android client.
+# Every recipe runs inside the Nix development shell, so `just` works from the host.
+
+default: build
+
+# Open an interactive development shell
+shell:
+    nix develop
+
+# Build the debug APK
+build:
+    nix develop -c ./gradlew assembleDebug
+
+# Run JVM unit tests
+test:
+    nix develop -c ./gradlew testDebugUnitTest
+
+# Remove build outputs
+clean:
+    nix develop -c ./gradlew clean
+
+# List connected adb devices
+devices:
+    nix develop -c adb devices
+
+# Pair with the phone over Wi-Fi: just pair IP:PAIRING_PORT PAIRING_CODE
+pair target code:
+    nix develop -c adb pair {{target}} {{code}}
+
+# Connect to the phone over Wi-Fi: just connect IP DEBUG_PORT
+connect ip port:
+    nix develop -c adb connect {{ip}}:{{port}}
+
+# Install the debug APK on the connected phone
+install:
+    nix develop -c adb install -r app/build/outputs/apk/debug/app-debug.apk
